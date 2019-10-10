@@ -1,0 +1,36 @@
+{
+    "HOME_PAGE" : "https://www.letras.mus.br",
+    "MENU_LETRAS" : "https://www.letras.mus.br/racionais-mcs",
+    "WIKIPAGE" : "https://pt.wikipedia.org/wiki/Lista_de_canções_de_Racionais_MC%27s",
+    "falsas_conhecidas" : ["Vida Loka (parte 3)","Vida Loka Também Ama",
+                     "That's My Way (Ed Rock part. Seu Jorge)",
+                     "Amor Distante (Mano Brown Part. Lino Krizz)",
+                     "Aquecendo As Naves",
+                     "Bebo Cana - Paródia da Musica Negro Drama",
+                     "Boom, Boom, Boom",
+                     "C1 Aparecida",
+                     "Carlos Mariguella",
+                     "Carro de Malandro",
+                     "Chove Chuva",
+                     "Cocaina"],
+     "dict_erradas" : {
+         "Vida Loka (parte1)" : "Vida Loka I",
+         "Vida Loka (parte 2)" : "Vida Loka II",
+         "Genesis" : "Genesis (Intro)",
+         "Sou Mais Você" : "Sou + Você",
+         "Finado Neguin" : "Cores e Valores Finado \"Neguin\"",
+         "Periferia É Periferia" : "Periferia é Periferia (Em Qualquer Lugar)"
+     },
+     "instrumentais_misc" : [
+         "Vida Loka (Intro)", 
+         "Introdução", 
+         "...", 
+         "Agradecimentos", 
+         "Trilha",
+         "Voz Ativa - Versão Rádio"
+     ]
+}
+
+
+
+    
