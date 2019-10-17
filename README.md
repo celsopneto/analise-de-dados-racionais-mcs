@@ -9,7 +9,7 @@ Fale sobre qualquer coisa, o Racionais MC's já colocou numa música.
    O projeto se divide em três fases:
    
 - [x] Web scraping das informações e letras das músicas.
-  * Resultado [*aqui*](../blob/master/data.json)
+  * Resultado [*aqui*](../master/data.json)
 - [ ] Análise dos dados com a biblioteca spacy.
 - [ ] Apresentação dos dados.
       
