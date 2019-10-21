@@ -43,16 +43,7 @@ t = df_analise.iloc[0]['letra']
 test = nlp(t)
 texts = [token.text for token in test]
 pos = [token.pos_ for token in test]
-
-# coisas que tirei do site do spacy 
-#for token in test:
-#    # Get the token text, part-of-speech tag and dependency label
-#    token_text = token.text
-#    token_pos = token.pos_
-#    token_dep = token.dep_
-#    # This is for formatting only
-#    print("{:<12}{:<10}{:<10}".format(token_text, token_pos, token_dep))
-#
-#for ent in test.ents:
-#    # Print the entity text and label
-#    print(ent.text, ent.label_)
+deps = [token.dep_ for token in test]
+# CAMINHO IMPORTANTE, Reconhecimento de entidades mencionadas (REM)
+# https://teses.usp.br/teses/disponiveis/45/45134/tde-23052013-104248/publico/dissertacao_rem_wesley_seidel.pdf
+ents = [(entity, entity.label_) for entity in test.ents]
