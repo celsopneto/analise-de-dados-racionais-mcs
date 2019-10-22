@@ -6,32 +6,25 @@ Created on Sat Jan  5 09:51:16 2019
 
 
 """
-#import pdb
 import datetime as dt
 import json
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
-pd.options.display.max_rows = 100
-pd.options.display.max_columns = 50
 start = dt.datetime.now()
-
-
-testing = False
 
 class InfoLetra:
     """ Objeto que faz o webscrapping, recolhe titulo e letra.
     """
 
-
-    def __init__(self, link):
+    def __init__(self, link_letra):
         """
             Recolhe as informações sobre a letra da música a partir do link.
             titulo e letra
             Inicia __status_dataframe para o backcheck
         """
-        self.__bs_letra = BeautifulSoup(requests.get(link).content,
+        self.__bs_letra = BeautifulSoup(requests.get(link_letra).content,
                                         'html.parser')
         self.__titulo = self.__bs_letra.find("div",
                                              "cnt-head_title").h1.string
@@ -44,15 +37,28 @@ class InfoLetra:
         """
         return str(self.__titulo)
 
+
     def letra(self):
         """
             retorna a letra substituindo formatação.
         """
-        para_remover = ["<br/>", "</br>", "<br>", "[", "]"]
+        para_remover = ["<br/>",
+                        "</br>",
+                        "<br>",
+                        "[",
+                        "]",
+                        "'"
+                        ]
         letra_em_lista = [find.contents for find in self.__letra_finds]
         letra = ''.join(map(str, letra_em_lista))
-        for item in para_remover:
-            letra = letra.replace(item, "")
+ 
+        for char in para_remover:
+            letra = letra.replace(char, " ")
+        para_trocar = [" ,", ",,", ", , "]
+ 
+        for char in para_trocar:
+            letra = letra.replace(char, ",")
+
         return  letra
 
     def reseta_titulo(self, novo_titulo):
@@ -120,16 +126,15 @@ tabela_html.body.append(TABELA_WIKI)
 SONGS_WIKI_DF = pd.read_html(str(tabela_html))[0]
 
 links_d = {}
-for i in range(len(links_letras)):
-    links_d[i] = configs['HOME_PAGE'] + links_letras[i].get('href')
+for i, link  in enumerate(links_letras):
+    links_d[i] = configs['HOME_PAGE'] + link.get('href')
 
 falsas_conhecidas = configs['falsas_conhecidas']
 erradas_conhecidas = configs['dict_erradas']
 infos_letras = []
 
-
-for i in range(len(links_d)):
-    infos_letras.append(InfoLetra(links_d[i]))
+for (i, item) in enumerate(links_d.items()):
+    infos_letras.append(InfoLetra(item[1]))
     titulo = infos_letras[i].titulo()
     if titulo in configs['dict_erradas'].keys():
         infos_letras[i].reseta_titulo(configs['dict_erradas'][titulo])
@@ -147,9 +152,9 @@ songs_wiki_letras = songs_wiki_letras.apply(lambda x: recupera_letra(x, infos_le
 result = songs_wiki_letras.append(SONGS_WIKI_DF.loc[SONGS_WIKI_DF['Canção']\
                                   .isin(configs["instrumentais_misc"])],\
                                   sort=False)
-if not testing:
-    with open('data.json', 'w', encoding='utf-8') as file:
-        result.to_json(file, force_ascii=False)
+
+with open('data.json', 'w', encoding='utf-8') as file:
+    result.to_json(file, force_ascii=False)
 end = dt.datetime.now()
 time = end - start
 print("A extração demorou {} segundos.".format(time.seconds))
