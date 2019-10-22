@@ -39,7 +39,7 @@ for i in range(len(df_analise)):
           ---------""".format(df_analise.iloc[i]['Canção'], 
           df_analise.iloc[i]['letra']))
     
-t = df_analise.iloc[0]['letra']
+t = df_analise.iloc[0]['letra'].strip()
 test = nlp(t)
 texts = [token.text for token in test]
 pos = [token.pos_ for token in test]
