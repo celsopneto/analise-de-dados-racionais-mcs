@@ -1,8 +1,9 @@
 {
     "HOME_PAGE" : "https://www.letras.mus.br",
     "MENU_LETRAS" : "https://www.letras.mus.br/racionais-mcs",
-    "WIKIPAGE" : "https://pt.wikipedia.org/wiki/Lista_de_canções_de_Racionais_MC%27s",
-    "falsas_conhecidas" : ["Vida Loka (parte 3)","Vida Loka Também Ama",
+    "WIKIPAGE" : "https://pt.wikipedia.org/wiki/Lista_de_canções_de_Racionais_MC%27s", 
+    "albums_rm" : ["Racionais MC's", "1000 Trutas, 1000 Tretas", "Coletânea 25 Anos","Ao Vivo","Consciência Black, Vol. I", " Lado A",
+" Lado B", " 1", " 2"], "falsas_conhecidas" : ["Vida Loka (parte 3)","Vida Loka Também Ama",
                      "That's My Way (Ed Rock part. Seu Jorge)",
                      "Amor Distante (Mano Brown Part. Lino Krizz)",
                      "Aquecendo As Naves",

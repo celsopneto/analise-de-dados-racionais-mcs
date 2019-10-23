@@ -102,6 +102,17 @@ def recupera_letra(row, a_infos_letras):
 
     return row
 
+def arruma_albums(row):
+    album = row['Álbum']
+    for item in configs["albums_rm"]:
+        album =  album.replace(item, '')
+        album = album.strip()
+        if album in ['', 'Nenhum']:
+            album = 'singles'
+        if album == 'Escolha seu Caminho':
+            album = 'Escolha o seu Caminho'
+    row['Álbum'] = album
+    return row
 
 with open("configs.json", encoding='utf-8') as file:
     configs = json.load(file)
@@ -123,8 +134,8 @@ tabela_html.body.append(TABELA_WIKI)
 
 # necessidade do [0]
 # pd.read_html() retorna uma lista de DataFrames
-SONGS_WIKI_DF = pd.read_html(str(tabela_html))[0]
-
+songs_wiki_df = pd.read_html(str(tabela_html))[0]
+songs_wiki_df = songs_wiki_df.apply(arruma_albums, axis=1)
 links_d = {}
 for i, link  in enumerate(links_letras):
     links_d[i] = configs['HOME_PAGE'] + link.get('href')
@@ -144,12 +155,12 @@ infos_letras = [song for song in infos_letras if song.titulo() \
 
 
 # Separando as instrumentais e outros casos especiais,
-songs_wiki_letras = SONGS_WIKI_DF.loc[~SONGS_WIKI_DF['Canção']\
+songs_wiki_letras = songs_wiki_df.loc[~songs_wiki_df['Canção']\
                                   .isin(configs["instrumentais_misc"])]
 songs_wiki_letras = songs_wiki_letras.apply(lambda x: recupera_letra(x, infos_letras),
                                             axis=1)
 
-result = songs_wiki_letras.append(SONGS_WIKI_DF.loc[SONGS_WIKI_DF['Canção']\
+result = songs_wiki_letras.append(songs_wiki_df.loc[songs_wiki_df['Canção']\
                                   .isin(configs["instrumentais_misc"])],\
                                   sort=False)
 
