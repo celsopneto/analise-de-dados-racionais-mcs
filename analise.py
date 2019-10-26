@@ -38,6 +38,10 @@ class NlpLetra:
         return [token.pos_ for token in self.__nlp\
                 if token.pos_ not in self.__excluir]
 
+
+    def tags(self):
+        return [token.tag_ for token in self.__nlp\
+                if token.pos_ not in self.__excluir]
     def deps(self):
         return [token.dep_ for token in self.__nlp\
                 if token.pos_ not in self.__excluir]
@@ -53,9 +57,43 @@ df_letras["total_palavras"] = df_letras.apply(lambda x:
 df_letras["palavras_unicas"] = df_letras.apply(lambda x:
     len(set(x['nlp_obj'].texts())), axis=1)
 
+    
+lista_albums = list(df['Álbum'].unique())
+
+
+t = df_letras.iloc[0]
+# 15 diário de um detento
+nlp_t = df_letras.iloc[15, 4]
+
+# Este df_nlp parece uma boa forma de analizar
+# teste com 1 por amor 2 por dinheiro já mostra algumas inconsistências no
+# reconhecimento. Ex deus como conjunção subordinativa ("pos SCONJ")
+# irmãos e olhos em pos SYM
+# alguns DET em ADJ em diário de um detento
+
+
+
+df_nlp = pd.DataFrame({"pos":nlp_t.pospeech(),
+                       "tag":nlp_t.tags(),
+                       "text": nlp_t.texts()})
+print(df_nlp['pos'].value_counts())
+
+def df_postag(df, tag):
+    return df_nlp.loc[df_nlp["pos"] == tag]
+
 #df_albums = df_letras.groupby('Álbum')
-#t = df.iloc[0]['letra']
-#test = nlp(t)
+#
 ## CAMINHO IMPORTANTE, Reconhecimento de entidades mencionadas (REM)
 ## 
-    
+# após correção, apenas os albums importantes ficaram aparecendo
+# verificados, Escolha seu caminho que tem 2 letras
+# no EP repete 3x a musica voz ativa 
+
+#  Album                               num_letras
+# Nada como um Dia após o Outro Dia    20
+# Cores & Valores                      14
+# Sobrevivendo no Inferno              11
+# Holocausto Urbano                     6
+# Raio X Brasil                         6
+# Escolha o seu Caminho                 2
+# singles                               2
