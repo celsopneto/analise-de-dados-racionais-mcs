@@ -16,10 +16,24 @@ pd.options.display.max_columns = 50
 caminho_arquivo = "scrapping" + os.sep + "data.json"
 df = pd.read_json(caminho_arquivo, encoding='utf-8')
 df = df[['Canção', 'Participantes', 'Álbum', 'letra']]
+
+df['Participantes'] = df.apply(lambda x:
+    [el.strip() for el in x['Participantes'].split(",")], axis=1)
+
+
+# verificar os participantes listados:
+# para depois analisar a participação
 # testar o get_dummies()
-#df['Participantes'] = df.apply(lambda x:
-#    [el.strip() for el in x['Participantes'].split(",")], axis=1)
-    
+
+#de np.ndarray para list
+listed = list(df['Participantes'].values)
+# essa compreensão de lista confesso que devo ao stackoverflow :D
+# flat_list = [item for sublist in l for item in sublist]
+total_participantes = [nome for nomes in listed for nome in nomes]
+# provavelmente não vai ser útil se precisarmos da ordem
+
+participantes_unique = list(set(total_participantes)) 
+
 df_letras = df.loc[~df['letra'].isnull()].copy().reset_index(drop=True)
 
 
@@ -27,7 +41,6 @@ class NlpLetra:
     """
         Objeto que busca no modulo spaCy a interpretaçao da letra.
     """
-
     def __init__(self, letra):
         self.__nlp = nlp(letra)
         self.__excluir = ["SPACE", "PUNCT"]
@@ -73,9 +86,6 @@ df_letras["palavras_unicas"] = df_letras.apply(lambda x:
 lista_albums = list(df['Álbum'].unique())
 
 
-# 15 diário de um detento 4 é a ref da coluna nlp_obj
-
-
 # Este df_nlp parece uma boa forma de analizar
 # teste com 1 por amor 2 por dinheiro já mostra algumas inconsistências no
 # reconhecimento. Ex deus como conjunção subordinativa ("pos SCONJ")
@@ -84,28 +94,26 @@ lista_albums = list(df['Álbum'].unique())
 # A solução é basicamente treinar outro modelo?
 
 
-#nlp_t = df_letras.iloc[15, 4]
-#df_nlp = pd.DataFrame({"pos":nlp_t.pospeech(),
-#                       "tag":nlp_t.tags(),
-#                       "text": nlp_t.texts()})
-#
-#print(df_nlp['pos'].value_counts())
+nlp_t = df_letras.iloc[15, 4]
+df_nlp = pd.DataFrame({"pos":nlp_t.pospeech(),
+                       "tag":nlp_t.tags(),
+                       "text": nlp_t.texts()})
+
+print(df_nlp['pos'].value_counts())
 
 
 
 
 
-#def df_postag(df, tag):
-#    return df_nlp.loc[df_nlp["pos"] == tag]
-#
 
-#df_albums = df_letras.groupby('Álbum')
-#
+
 
 # após correção, apenas os albums importantes ficaram aparecendo
 # verificados, Escolha seu caminho que tem 2 letras
 # no EP repete 3x a musica voz ativa 
 
+#df_albums = df_letras.groupby('Álbum')
+#
 #  Album                               num_letras
 # Nada como um Dia após o Outro Dia    20
 # Cores & Valores                      14
