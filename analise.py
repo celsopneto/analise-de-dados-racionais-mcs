@@ -9,6 +9,8 @@ import os
 import pandas as pd
 import spacy
 
+#TODO
+#instalar novo modelo
 nlp = spacy.load("pt_core_news_sm")
 
 pd.options.display.max_rows = 100
@@ -32,7 +34,7 @@ listed = list(df['Participantes'].values)
 total_participantes = [nome for nomes in listed for nome in nomes]
 # provavelmente não vai ser útil se precisarmos da ordem
 
-participantes_unique = list(set(total_participantes)) 
+participantes_unique = list(set(total_participantes))
 
 df_letras = df.loc[~df['letra'].isnull()].copy().reset_index(drop=True)
 
@@ -45,7 +47,7 @@ class NlpLetra:
         self.__nlp = nlp(letra)
         self.__excluir = ["SPACE", "PUNCT"]
         self.__pos_dict()
-        
+
 
     def texts(self):
         return [token.text for token in self.__nlp \
@@ -59,14 +61,14 @@ class NlpLetra:
     def tags(self):
         return [token.tag_ for token in self.__nlp\
                 if token.pos_ not in self.__excluir]
-        
+
     def __pos_dict(self):
         self.pos_dict =   {
          "pos": self.pospeech(),
          "tag": self.tags(),
          "text": self.texts()
          }
-        
+
     def deps(self):
         return [token.dep_ for token in self.__nlp\
                 if token.pos_ not in self.__excluir]
@@ -82,7 +84,7 @@ df_letras["total_palavras"] = df_letras.apply(lambda x:
 df_letras["palavras_unicas"] = df_letras.apply(lambda x:
     len(set(x['nlp_obj'].texts())), axis=1)
 
-    
+
 lista_albums = list(df['Álbum'].unique())
 
 
@@ -110,7 +112,7 @@ print(df_nlp['pos'].value_counts())
 
 # após correção, apenas os albums importantes ficaram aparecendo
 # verificados, Escolha seu caminho que tem 2 letras
-# no EP repete 3x a musica voz ativa 
+# no EP repete 3x a musica voz ativa
 
 #df_albums = df_letras.groupby('Álbum')
 #
