@@ -26,10 +26,9 @@ class InfoLetra:
         """
         self.__bs_letra = BeautifulSoup(requests.get(link_letra).content,
                                         'html.parser')
-        self.__titulo = self.__bs_letra.find("div",
-                                             "cnt-head_title").h1.string
+        self.__titulo = self.__bs_letra.find("h1", "head-title").string
         self.__letra_finds = self.__bs_letra\
-        .find("div", "cnt-letra").find_all('p')
+        .find("div", class_="lyric-original").find_all('p')
 
     def titulo(self):
         """
@@ -121,10 +120,9 @@ MENU_LETRAS = BeautifulSoup(requests.get(configs['MENU_LETRAS']).content,
                             'html.parser')
 WIKI = BeautifulSoup(requests.get(configs['WIKIPAGE']).content, 'html.parser')
 TABELA_WIKI = WIKI.find("table", "wikitable")
-
 links_letras = MENU_LETRAS.find(id='cnt-artist-songlist').find_all('a')
-#Começando em 1 por amor, 2 por dinheiro, até voz ativa
-links_letras = links_letras[2:-22]
+
+links_letras = MENU_LETRAS.find(id='cnt-artist-songlist').find_all('a',class_='songList-table-songName')
 
 with open("index.html", encoding='utf-8') as html_file:
     HTML = html_file.read()

@@ -11,7 +11,7 @@ import spacy
 
 #TODO
 #instalar novo modelo
-nlp = spacy.load("pt_core_news_sm")
+nlp = spacy.load("pt_core_news_lg")
 
 pd.options.display.max_rows = 100
 pd.options.display.max_columns = 50
