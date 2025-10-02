@@ -3,7 +3,8 @@
     "MENU_LETRAS" : "https://www.letras.mus.br/racionais-mcs",
     "WIKIPAGE" : "https://pt.wikipedia.org/wiki/Lista_de_canções_de_Racionais_MC%27s", 
     "albums_rm" : ["Racionais MC's", "1000 Trutas, 1000 Tretas", "Coletânea 25 Anos","Ao Vivo","Consciência Black, Vol. I", " Lado A",
-" Lado B", " 1", " 2"], "falsas_conhecidas" : ["Vida Loka (parte 3)","Vida Loka Também Ama",
+" Lado B", " 1", " 2"], 
+    "falsas_conhecidas" : ["Vida Loka (parte 3)","Vida Loka Também Ama",
                      "That's My Way (Ed Rock part. Seu Jorge)",
                      "Amor Distante (Mano Brown Part. Lino Krizz)",
                      "Aquecendo As Naves",
@@ -13,14 +14,15 @@
                      "Carlos Mariguella",
                      "Carro de Malandro",
                      "Chove Chuva",
-                     "Cocaina"],
-     "dict_erradas" : {
-         "Vida Loka (parte1)" : "Vida Loka I",
-         "Vida Loka (parte 2)" : "Vida Loka II",
-         "Genesis" : "Genesis (Intro)",
-         "Sou Mais Você" : "Sou + Você",
-         "Finado Neguin" : "Cores e Valores Finado \"Neguin\"",
-         "Periferia É Periferia" : "Periferia é Periferia (Em Qualquer Lugar)"
+                     "Cocaina",
+                    "Cocaína"],
+    "dict_erradas" : {
+         "vida loka, pt 1" : "vida loka i",
+         "vida loka, pt 2" : "vida loka ii",
+         "genesis" : "genesis (intro)",
+         "sou mais você" : "sou + você",
+         "finado neguin" : "cores e valores finado \"neguin\"",
+         "periferia é periferia" : "periferia é periferia (em qualquer lugar)"
      },
      "instrumentais_misc" : [
          "Vida Loka (Intro)", 
