@@ -9,8 +9,7 @@ import os
 import pandas as pd
 import spacy
 
-#TODO
-#instalar novo modelo
+
 nlp = spacy.load("pt_core_news_lg")
 
 pd.options.display.max_rows = 100
@@ -75,7 +74,33 @@ class NlpLetra:
 
     def ents(self):
         return [(entity, entity.label_) for entity in self.__nlp.ents]
+    
+def densidade_lirica(row):
+    """Calcula métricas específicas de densidade lírica"""
+    nlp_t = row['nlp_obj']
+    df_nlp = pd.DataFrame({"pos":nlp_t.pospeech(),
+                       "tag":nlp_t.tags(),
+                       "text": nlp_t.texts()})
+    
+    # Densidade nominal (substantivos e nomes próprios)
+    densidade_nominal = len(df_nlp[df_nlp['pos'].isin(['NOUN', 'PROPN'])]) / len(df_nlp)
+    
+    # Densidade adjetival (palavras descritivas)
+    densidade_adjetival = len(df_nlp[df_nlp['pos'] == 'ADJ']) / len(df_nlp)
+    
+    # Densidade verbal (ações e estados)
+    densidade_verbal = len(df_nlp[df_nlp['pos'] == 'VERB']) / len(df_nlp)
+    
+    # Densidade adverbial (modificadores expressivos)
+    densidade_adverbial = len(df_nlp[df_nlp['pos'] == 'ADV']) / len(df_nlp)
 
+    row['densidade_nominal'] = densidade_nominal
+    row['densidade_adjetival'] = densidade_adjetival
+    row['densidade_verbal'] =  densidade_verbal
+    row['densidade_adverbial'] = densidade_adverbial,
+    row['densidade_total'] = densidade_nominal + densidade_adjetival + densidade_verbal + densidade_adverbial
+    
+    return row
 
 df_letras["nlp_obj"] = df_letras.apply(lambda x: NlpLetra(x['letra']),
                                         axis=1)
@@ -84,22 +109,48 @@ df_letras["total_palavras"] = df_letras.apply(lambda x:
 df_letras["palavras_unicas"] = df_letras.apply(lambda x:
     len(set(x['nlp_obj'].texts())), axis=1)
 
+df_letras["diversidade_lexica"] = df_letras.apply(densidade_lirica, axis=1)
+
 
 lista_albums = list(df['Álbum'].unique())
 
 
-# Este df_nlp parece uma boa forma de analizar
-# teste com 1 por amor 2 por dinheiro já mostra algumas inconsistências no
-# reconhecimento. Ex deus como conjunção subordinativa ("pos SCONJ")
-# irmãos e olhos em pos SYM
-# alguns DET em ADJ em diário de um detento
-# A solução é basicamente treinar outro modelo?
 
 
 nlp_t = df_letras.iloc[15, 4]
 df_nlp = pd.DataFrame({"pos":nlp_t.pospeech(),
                        "tag":nlp_t.tags(),
                        "text": nlp_t.texts()})
+def densidade_lirica(df_nlp):
+    """Calcula métricas específicas de densidade lírica"""
+    
+    
+    # Densidade nominal (substantivos e nomes próprios)
+    densidade_nominal = len(df_nlp[df_nlp['pos'].isin(['NOUN', 'PROPN'])]) / len(df_nlp)
+    
+    # Densidade adjetival (palavras descritivas)
+    densidade_adjetival = len(df_nlp[df_nlp['pos'] == 'ADJ']) / len(df_nlp)
+    
+    # Densidade verbal (ações e estados)
+    densidade_verbal = len(df_nlp[df_nlp['pos'] == 'VERB']) / len(df_nlp)
+    
+    # Densidade adverbial (modificadores expressivos)
+    densidade_adverbial = len(df_nlp[df_nlp['pos'] == 'ADV']) / len(df_nlp)
+    
+    return {
+        'densidade_nominal': densidade_nominal,
+        'densidade_adjetival': densidade_adjetival,
+        'densidade_verbal': densidade_verbal,
+        'densidade_adverbial': densidade_adverbial,
+        'densidade_total': densidade_nominal + densidade_adjetival + densidade_verbal + densidade_adverbial
+    }
+
+
+
+        
+        
+        
+    
 
 print(df_nlp['pos'].value_counts())
 
