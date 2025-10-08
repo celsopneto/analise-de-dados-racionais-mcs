@@ -130,6 +130,7 @@ def arruma_albums(row):
     row['Álbum'] = album
     return row
 
+
 with open("configs.json", encoding='utf-8') as file:
     configs = json.load(file)
 
@@ -182,7 +183,9 @@ songs_wiki_letras = songs_wiki_letras.apply(lambda x: recupera_letra(x, infos_le
 
 
 s2 =songs_wiki_df.loc[songs_wiki_df['Canção'].isin(configs["instrumentais_misc"])]
-result = pd.concat([songs_wiki_letras, s2], ignore_index=True)                                  
+result = pd.concat([songs_wiki_letras, s2], ignore_index=True)
+
+
 
 with open('data.json', 'w', encoding='utf-8') as file:
     result.to_json(file, force_ascii=False)
