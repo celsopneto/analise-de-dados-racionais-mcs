@@ -19,9 +19,16 @@ caminho_arquivo = "scrapping" + os.sep + "data.json"
 df = pd.read_json(caminho_arquivo, encoding='utf-8')
 df = df[['Canção', 'Participantes', 'Álbum', 'letra']]
 
-df['Participantes'] = df.apply(lambda x:
-    [el.strip() for el in x['Participantes'].split(",")], axis=1)
+with open("scrapping" + os.sep + "configs.json", encoding='utf-8') as file:
+    configs = json.load(file)
 
+
+df['Participantes'] = df.apply(lambda x:
+    [el.strip() for el in x['Participantes']
+     .replace(" e ",",")
+     .split(",")], axis=1)
+
+#df[df['Participantes'].map(lambda l: len(l)>1)]
 
 # verificar os participantes listados:
 # para depois analisar a participação
@@ -78,17 +85,12 @@ class NlpLetra:
         return [(entity, entity.label_) for entity in self.__nlp.ents]
     
 def densidade_lexical(row):
-    CATEGORIAS_CONTEUDO = ['NOUN', 'PROPN', 'ADJ', 'VERB', 'ADV']
     """Calcula métricas específicas de densidade lírica"""
+    CATEGORIAS_CONTEUDO = ['NOUN', 'PROPN', 'ADJ', 'VERB', 'ADV']
     nlp_t = row['nlp_obj']
     df_nlp = pd.DataFrame({"pos":nlp_t.pospeech(),
                        "tag":nlp_t.tags(),
                        "text": nlp_t.texts()})
-    
-    # Densidade nominal (substantivos e nomes próprios)
-    #densidade_nominal = len(df_nlp[df_nlp['pos'].isin(['NOUN', 'PROPN'])]) / len(df_nlp)
-    
-   
     row['densidade_lexical'] = len(df_nlp[df_nlp['pos'].isin(CATEGORIAS_CONTEUDO)]) / len(df_nlp)
     
     return row
@@ -100,25 +102,13 @@ df_letras["nlp_obj"] = df_letras.apply(lambda x: NlpLetra(x['letra']),
 # df_letras["palavras_unicas"] = df_letras.apply(lambda x:
 #     len(set(x['nlp_obj'].texts())), axis=1)
 
-df_letras = df_letras.apply(densidade_lirica, axis=1)
-
-
+df_letras = df_letras.apply(densidade_lexical, axis=1)
 lista_albums = list(df['Álbum'].unique())
-
-
-
 
 nlp_t = df_letras.iloc[15, 4]
 df_nlp = pd.DataFrame({"pos":nlp_t.pospeech(),
                        "tag":nlp_t.tags(),
                        "text": nlp_t.texts()})
-
-# após correção, apenas os albums importantes ficaram aparecendo
-# verificados, Escolha seu caminho que tem 2 letras
-# no EP repete 3x a musica voz ativa
-
-with open("scrapping" + os.sep + "configs.json", encoding='utf-8') as file:
-    configs = json.load(file)
 
 datas_albums = configs['datas_albums']
 df_albums = df_letras.groupby('Álbum', as_index=False).agg({
@@ -130,12 +120,4 @@ df_albums = df_letras.groupby('Álbum', as_index=False).agg({
         })
 df_albums['ano'] = df_albums['Álbum'].map(datas_albums)
 df_albums = df_albums.sort_values(by='ano')
-#
-#  Album                               num_letras
-# Nada como um Dia após o Outro Dia    20
-# Cores & Valores                      14
-# Sobrevivendo no Inferno              11
-# Holocausto Urbano                     6
-# Raio X Brasil                         6
-# Escolha o seu Caminho                 2
-# singles                               2
+
